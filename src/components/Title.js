@@ -1,6 +1,6 @@
-import { colors } from "@/config/colors";
-import React from "react";
 import { styled } from "styled-components";
+
+import { colors } from "@/config/colors";
 
 const Text = styled.h1`
   font-size: clamp(24px, 2.5vw, 30px);

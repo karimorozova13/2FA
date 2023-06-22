@@ -1,16 +1,16 @@
 import BgSection from "@/components/BgSection";
-import LoginForm from "@/components/LoginForm";
 import LoginRegisterLayout from "@/components/LoginRegisterLayout";
+import RegisterForm from "@/components/RegisterForm";
 
-const Home = () => {
+const register = () => {
   return (
     <>
       <LoginRegisterLayout>
-        <LoginForm />
         <BgSection />
+        <RegisterForm />
       </LoginRegisterLayout>
     </>
   );
 };
 
-export default Home;
+export default register;

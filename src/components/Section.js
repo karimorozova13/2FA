@@ -1,5 +1,6 @@
-import { snakeBg } from "@/config/images";
 import styled from "styled-components";
+
+import { snakeBg } from "@/config/images";
 
 const Wrap = styled.div`
   width: 100vw;

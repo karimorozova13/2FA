@@ -1,6 +1,9 @@
-import Layout from "@/components/Layout";
-import "@/styles/globals.css";
 import localFont from "next/font/local";
+
+import "@/styles/globals.css";
+
+import Layout from "@/components/Layout";
+
 const Quicksand = localFont({
   src: [
     {
@@ -20,7 +23,8 @@ const Quicksand = localFont({
     },
   ],
 });
-export default function App({ Component, pageProps }) {
+
+const App = ({ Component, pageProps }) => {
   return (
     <main className={Quicksand.className}>
       <Layout>
@@ -28,4 +32,6 @@ export default function App({ Component, pageProps }) {
       </Layout>
     </main>
   );
-}
+};
+
+export default App;

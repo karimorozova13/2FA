@@ -1,6 +1,7 @@
-import { colors } from "@/config/colors";
-import React from "react";
 import { styled } from "styled-components";
+
+import { colors } from "@/config/colors";
+
 const CtaBtn = styled.button`
   width: 100%;
   min-height: 40px;
@@ -15,15 +16,16 @@ const CtaBtn = styled.button`
   border: 1px solid ${colors.cta};
   outline: none;
   cursor: pointer;
+  margin-bottom: ${({ mb }) => `${mb}px`};
   &:hover {
     color: ${colors.cta};
     background-color: ${colors.mainWhite};
   }
 `;
 
-const CTA = ({ onClick = () => {}, text = "", type = "submit" }) => {
+const CTA = ({ onClick = () => {}, text = "", type = "submit", mb = 0 }) => {
   return (
-    <CtaBtn type={type} onClick={onClick}>
+    <CtaBtn mb={mb} type={type} onClick={onClick}>
       {text}
     </CtaBtn>
   );
