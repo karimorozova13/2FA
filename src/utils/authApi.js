@@ -2,7 +2,7 @@ import axios from "axios";
 
 const apiConfig = axios.create({
   baseURL: "http://localhost:3003/",
-  headers: {},
+  headers: { credentials: "include" },
 });
 
 export const authApi = {

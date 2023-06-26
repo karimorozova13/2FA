@@ -13,8 +13,6 @@ import Checkbox from "./Checkbox";
 import CTA from "./CTA";
 import LinksText from "./LinksText";
 import FormContainer from "./FormContainer";
-import axios from "axios";
-import { useState } from "react";
 
 const PasswordActions = styled.div`
   display: flex;
@@ -36,7 +34,38 @@ const PasswordActions = styled.div`
 
 const LoginForm = () => {
   const router = useRouter();
-  const [error, setError] = useState(null);
+
+  const saveCredentials = (email, password) => {
+    // Check if the browser supports the PasswordCredential API
+    if ("credentials" in navigator) {
+      // Check if the user has already saved credentials for the website
+      navigator.credentials
+        .get({ password: true })
+        .then((credential) => {
+          console.log(credential);
+          if (!credential) {
+            // Create a new PasswordCredential object
+            const newCredential = new PasswordCredential({
+              id: email,
+              password: password,
+            });
+
+            // Store the new credential
+            navigator.credentials
+              .store(newCredential)
+              .then(() => {
+                console.log("Credentials saved successfully!");
+              })
+              .catch((error) => {
+                console.error("Failed to save credentials:", error);
+              });
+          }
+        })
+        .catch((error) => {
+          console.error("Error retrieving saved credentials:", error);
+        });
+    }
+  };
 
   return (
     <FormContainer>
@@ -54,8 +83,14 @@ const LoginForm = () => {
           savePassword: Yup.boolean().required(),
         })}
         onSubmit={async (values) => {
+          if (values.savePassword) {
+            saveCredentials(values.email, values.password);
+          }
+
           try {
-            await authApi.login(values);
+            const res = await authApi.login(values);
+            localStorage.setItem("token", res.token);
+
             router.push("/welcome");
           } catch (error) {
             console.log(error);
@@ -91,7 +126,7 @@ const LoginForm = () => {
                   onBlur={handleBlur}
                   value={values.password}
                   placeholder={"Enter your password"}
-                  autoComplete="password"
+                  autoComplete="current-password"
                 />
               </Input>
               <PasswordActions>

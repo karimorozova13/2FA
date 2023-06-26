@@ -55,10 +55,17 @@ const RegisterForm = () => {
         })}
         onSubmit={async (values) => {
           try {
+            console.log({
+              ...values,
+              phone: `+${dialCode} ${values.phone}`,
+              savePassword: false,
+            });
             await authApi.register({
               ...values,
               phone: `+${dialCode} ${values.phone}`,
+              savePassword: false,
             });
+
             router.push("/");
           } catch (error) {
             console.log(error);
