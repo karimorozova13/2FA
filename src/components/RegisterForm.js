@@ -1,6 +1,9 @@
 import * as Yup from "yup";
 import "yup-phone";
 import { Formik, Form, Field } from "formik";
+import { useRouter } from "next/router";
+
+import { authApi } from "@/utils/authApi";
 
 import FormContainer from "./FormContainer";
 import LinksText from "./LinksText";
@@ -13,6 +16,7 @@ import DialCodeSelector from "./DialCodeSelector";
 
 const RegisterForm = () => {
   const [dialCode, setDialCode] = useState("");
+  const router = useRouter();
   return (
     <FormContainer>
       <Title title={"Welcome to the Adventure"} />
@@ -49,7 +53,17 @@ const RegisterForm = () => {
             .label("Confirm password")
             .oneOf([Yup.ref("password"), null], "Passwords should match"),
         })}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={async (values) => {
+          try {
+            await authApi.register({
+              ...values,
+              phone: `+${dialCode} ${values.phone}`,
+            });
+            router.push("/");
+          } catch (error) {
+            console.log(error);
+          }
+        }}
         validateOnChange={true}
       >
         {({ handleChange, handleSubmit, handleBlur, values, errors }) => {

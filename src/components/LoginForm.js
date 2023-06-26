@@ -1,8 +1,10 @@
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import { styled } from "styled-components";
+import { useRouter } from "next/router";
 
 import { colors } from "@/config/colors";
+import { authApi } from "@/utils/authApi";
 
 import Input from "./Input";
 import SubTitle from "./SubTitle";
@@ -11,6 +13,8 @@ import Checkbox from "./Checkbox";
 import CTA from "./CTA";
 import LinksText from "./LinksText";
 import FormContainer from "./FormContainer";
+import axios from "axios";
+import { useState } from "react";
 
 const PasswordActions = styled.div`
   display: flex;
@@ -31,6 +35,9 @@ const PasswordActions = styled.div`
 `;
 
 const LoginForm = () => {
+  const router = useRouter();
+  const [error, setError] = useState(null);
+
   return (
     <FormContainer>
       <Title title={"Welcome back"} />
@@ -46,7 +53,14 @@ const LoginForm = () => {
           password: Yup.string().required().label("Password"),
           savePassword: Yup.boolean().required(),
         })}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={async (values) => {
+          try {
+            await authApi.login(values);
+            router.push("/welcome");
+          } catch (error) {
+            console.log(error);
+          }
+        }}
         validateOnChange={true}
       >
         {({ handleChange, handleSubmit, handleBlur, values }) => {

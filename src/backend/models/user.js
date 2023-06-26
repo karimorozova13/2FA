@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
+const myCustomJoi = Joi.extend(require("joi-phone-number"));
 
 const userSchema = new Schema(
   {
@@ -17,6 +18,10 @@ const userSchema = new Schema(
       minlength: 6,
       required: true,
     },
+    savePassword: {
+      type: Boolean,
+      required: true,
+    },
     token: {
       type: String,
     },
@@ -24,10 +29,7 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 const registerSchema = Joi.object({
-  phone: Joi.extend(require("joi-phone-number"))
-    .string()
-    .phoneNumber()
-    .validate(),
+  phone: Joi.extend(require("joi-phone-number")).string().phoneNumber(),
   email: Joi.string().email().lowercase().required(),
   password: Joi.string().min(6).required(),
   confirmPassword: Joi.string().min(6).required(),
@@ -36,6 +38,7 @@ const registerSchema = Joi.object({
 const loginSchema = Joi.object({
   email: Joi.string().email().lowercase().required(),
   password: Joi.string().min(6).required(),
+  savePassword: Joi.boolean().required(),
 });
 
 const schemas = {

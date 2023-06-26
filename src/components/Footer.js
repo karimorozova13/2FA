@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { colors } from "@/config/colors";
 
 const Foot = styled.div`
-  position: ${({ position }) => position};
+  position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -17,9 +17,9 @@ const Foot = styled.div`
   }
 `;
 
-const Footer = ({ position = "absolute" }) => {
+const Footer = () => {
   return (
-    <Foot position={position}>
+    <Foot>
       <p>{`©${new Date().getFullYear()}. Created by Karine Morozova. All Rights Reserved.`}</p>
     </Foot>
   );

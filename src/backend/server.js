@@ -46,7 +46,6 @@ mongoose
     app.listen(PORT, () => console.log("Server is running"));
   })
   .catch((e) => {
-    console.log(33);
     console.log(e);
     process.exit(1);
   });

@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = process.env;
 
 const { basedir } = global;
-
 const { User, schemas } = require(`${basedir}/models/user`);
 
 const login = async (req, res) => {
@@ -13,7 +12,7 @@ const login = async (req, res) => {
     return res.status(400).json(error);
   }
 
-  const { email, password } = req.body;
+  const { email, password, savePassword } = req.body;
   const user = await User.findOne({ email });
 
   if (!user) {

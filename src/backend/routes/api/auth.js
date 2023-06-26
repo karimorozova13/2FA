@@ -6,7 +6,6 @@ const express = require("express");
 const authCtrl = require(`${basedir}/controllers/auth`);
 
 const router = express.Router();
-
 // signup
 router.post("/register", catchError(authCtrl.register));
 
