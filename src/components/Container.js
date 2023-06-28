@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Wrap = styled.div`
+const ContainerWrap = styled.div`
   display: flex;
   flex-direction: column;
   padding-right: 15px;
@@ -33,7 +33,7 @@ const Wrap = styled.div`
 `;
 
 const Container = ({ children }) => {
-  return <Wrap>{children}</Wrap>;
+  return <ContainerWrap>{children}</ContainerWrap>;
 };
 
 export default Container;

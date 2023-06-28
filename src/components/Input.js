@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 
 import { colors } from "@/config/colors";
 
-const Wrap = styled.div`
+const InputWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -33,7 +33,7 @@ const Wrap = styled.div`
 `;
 
 const Input = ({ children, mb = 20 }) => {
-  return <Wrap mb={mb}>{children}</Wrap>;
+  return <InputWrap mb={mb}>{children}</InputWrap>;
 };
 
 export default Input;

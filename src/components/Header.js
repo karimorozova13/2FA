@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { logo } from "@/config/images";
 
-const Wrap = styled.div`
+const HeaderWrap = styled.div`
   position: fixed;
   width: 100%;
   z-index: 2;
@@ -13,15 +13,12 @@ const Wrap = styled.div`
   align-items: center;
   padding-left: 15px;
   padding-top: 15px;
-
-  img {
-  }
 `;
 const Header = () => {
   return (
-    <Wrap>
+    <HeaderWrap>
       <Image alt={"Logo"} src={logo} width={100} height={50} priority />
-    </Wrap>
+    </HeaderWrap>
   );
 };
 export default Header;

@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 
 import { colors } from "@/config/colors";
 
-const Wrap = styled.div`
+const LinksWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,10 +20,10 @@ const Wrap = styled.div`
 
 const LinksText = ({ title, href, linkText }) => {
   return (
-    <Wrap>
+    <LinksWrap>
       <p>{title}</p>
       <Link href={href}>{linkText}</Link>
-    </Wrap>
+    </LinksWrap>
   );
 };
 

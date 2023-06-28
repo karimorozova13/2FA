@@ -5,7 +5,7 @@ import { colors } from "@/config/colors";
 import Container from "./Container";
 import Section from "./Section";
 
-const Wrap = styled.div`
+const LayoutWrap = styled.div`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -20,7 +20,7 @@ const LoginRegisterLayout = ({ children }) => {
   return (
     <Section h={"100vh"} bg={`${colors.sectionbg}`}>
       <Container>
-        <Wrap>{children}</Wrap>
+        <LayoutWrap>{children}</LayoutWrap>
       </Container>
     </Section>
   );

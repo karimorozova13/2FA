@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { snakeBg } from "@/config/images";
 
-const Wrap = styled.div`
+const SectionWrap = styled.div`
   width: 100vw;
   display: flex;
   align-items: center;
@@ -20,9 +20,9 @@ const Wrap = styled.div`
 
 const Section = ({ children, bg = "", h = "auto" }) => {
   return (
-    <Wrap h={h} bg={bg}>
+    <SectionWrap h={h} bg={bg}>
       {children}
-    </Wrap>
+    </SectionWrap>
   );
 };
 

@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 
 import { colors } from "@/config/colors";
 
-const Wrap = styled.div`
+const Form = styled.div`
   background-color: ${colors.loginBg};
   flex-basis: calc(100% / 2);
   display: flex;
@@ -26,7 +26,7 @@ const Wrap = styled.div`
 `;
 
 const FormContainer = ({ children }) => {
-  return <Wrap>{children}</Wrap>;
+  return <Form>{children}</Form>;
 };
 
 export default FormContainer;

@@ -75,7 +75,7 @@ const LoginForm = () => {
         initialValues={{
           password: "",
           email: "",
-          savePassword: false,
+          savePassword: true,
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().required().label("Email"),

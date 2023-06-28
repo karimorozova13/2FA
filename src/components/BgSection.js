@@ -2,19 +2,19 @@ import { styled } from "styled-components";
 
 import { snakeBg } from "@/config/images";
 
-const Section = styled.div`
+const SectionBg = styled.div`
   background-image: url(${snakeBg});
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  flex-basis: calc(100% / 2);
+  flex-basis: ${({ fb }) => fb};
   @media only screen and (max-width: 767px) {
     flex-basis: 0;
   }
 `;
 
-const BgSection = () => {
-  return <Section />;
+const BgSection = ({ fb = "calc(100% / 2)", children }) => {
+  return <SectionBg fb={fb}>{children}</SectionBg>;
 };
 
 export default BgSection;
