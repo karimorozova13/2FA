@@ -1,6 +1,5 @@
-import { styled } from "styled-components";
-
 import { colors } from "@/config/colors";
+import styled from "styled-components";
 
 const Foot = styled.div`
   position: absolute;

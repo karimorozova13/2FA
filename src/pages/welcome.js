@@ -1,3 +1,4 @@
+import BgSection from "@/components/BgSection";
 import Container from "@/components/Container";
 import LogOut from "@/components/LogOut";
 import Section from "@/components/Section";
@@ -9,11 +10,11 @@ const welcome = () => {
     <>
       <LogOut />
 
-      <Section h={"100vh"} bg={"teal"}>
+      <BgSection fb={"100%"} h={"100vh"}>
         <Container>
           <Title title={"Welcome"} />
         </Container>
-      </Section>
+      </BgSection>
     </>
   );
 };

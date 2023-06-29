@@ -1,5 +1,5 @@
-import { styled } from "styled-components";
 import { MdOutlineDone } from "react-icons/md";
+import styled from "styled-components";
 
 import { colors } from "@/config/colors";
 

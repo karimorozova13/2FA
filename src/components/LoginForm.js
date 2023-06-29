@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
-import { styled } from "styled-components";
 import { useRouter } from "next/router";
+import styled from "styled-components";
 
 import { colors } from "@/config/colors";
 import { authApi } from "@/utils/authApi";
