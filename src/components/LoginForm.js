@@ -13,6 +13,7 @@ import Checkbox from "./Checkbox";
 import CTA from "./CTA";
 import LinksText from "./LinksText";
 import FormContainer from "./FormContainer";
+import { useEffect, useState } from "react";
 
 const PasswordActions = styled.div`
   display: flex;
@@ -34,71 +35,80 @@ const PasswordActions = styled.div`
 
 const LoginForm = () => {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const saveCredentials = (email, password) => {
-    // Check if the browser supports the PasswordCredential API
-    if ("credentials" in navigator) {
-      // Check if the user has already saved credentials for the website
-      navigator.credentials
-        .get({ password: true })
-        .then((credential) => {
-          console.log(credential);
-          if (!credential) {
-            // Create a new PasswordCredential object
-            const newCredential = new PasswordCredential({
-              id: email,
-              password: password,
-            });
+  const getCookie = (val) => {
+    const name = val + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
 
-            // Store the new credential
-            navigator.credentials
-              .store(newCredential)
-              .then(() => {
-                console.log("Credentials saved successfully!");
-              })
-              .catch((error) => {
-                console.error("Failed to save credentials:", error);
-              });
-          }
-        })
-        .catch((error) => {
-          console.error("Error retrieving saved credentials:", error);
-        });
+    const cookieArray = decodedCookie.split(";");
+
+    for (let i = 0; i < cookieArray.length; i += 1) {
+      let cookie = cookieArray[i];
+      while (cookie.charAt(0) === " ") {
+        cookie = cookie.substring(1);
+      }
+
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
     }
   };
+  const [initialState, setInitialState] = useState({
+    password,
+    email,
+    savePassword: true,
+  });
+
+  const setCookie = (cname, cvalue, exdays) => {
+    const d = new Date();
+    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+    const expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  };
+  const login = async (values) => {
+    try {
+      const res = await authApi.login(values);
+      localStorage.setItem("token", res.token);
+      if (values.savePassword) {
+        setCookie("email", values.email, 30);
+        setCookie("password", values.password, 30);
+      }
+      router.push("/welcome");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    setEmail(getCookie("email"));
+    setPassword(getCookie("password"));
+    setInitialState((prevState) => ({
+      ...prevState,
+      password: getCookie("password"),
+      email: getCookie("email"),
+    }));
+  }, [email, password]);
 
   return (
     <FormContainer>
       <Title title={"Welcome back"} />
       <SubTitle mb={40} title={"Please enter your details"} />
       <Formik
-        initialValues={{
-          password: "",
-          email: "",
-          savePassword: true,
-        }}
+        initialValues={initialState}
         validationSchema={Yup.object().shape({
           email: Yup.string().required().label("Email"),
           password: Yup.string().required().label("Password"),
           savePassword: Yup.boolean().required(),
         })}
-        onSubmit={async (values) => {
-          if (values.savePassword) {
-            saveCredentials(values.email, values.password);
-          }
-
-          try {
-            const res = await authApi.login(values);
-            localStorage.setItem("token", res.token);
-
-            router.push("/welcome");
-          } catch (error) {
-            console.log(error);
-          }
-        }}
+        onSubmit={login}
         validateOnChange={true}
       >
         {({ handleChange, handleSubmit, handleBlur, values }) => {
+          console.log(initialState, "initialState");
+          console.log(values, "values");
+
           return (
             <Form>
               <Input>
