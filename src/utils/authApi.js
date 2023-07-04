@@ -21,4 +21,12 @@ export const authApi = {
       },
     });
   },
+  current: async (token) => {
+    const res = await apiConfig.get("api/auth/current", {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data.data.user;
+  },
 };

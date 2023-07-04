@@ -13,7 +13,6 @@ import Checkbox from "./Checkbox";
 import CTA from "./CTA";
 import LinksText from "./LinksText";
 import FormContainer from "./FormContainer";
-import { useEffect, useState } from "react";
 
 const PasswordActions = styled.div`
   display: flex;
@@ -35,31 +34,6 @@ const PasswordActions = styled.div`
 
 const LoginForm = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const getCookie = (val) => {
-    const name = val + "=";
-    const decodedCookie = decodeURIComponent(document.cookie);
-
-    const cookieArray = decodedCookie.split(";");
-
-    for (let i = 0; i < cookieArray.length; i += 1) {
-      let cookie = cookieArray[i];
-      while (cookie.charAt(0) === " ") {
-        cookie = cookie.substring(1);
-      }
-
-      if (cookie.indexOf(name) === 0) {
-        return cookie.substring(name.length, cookie.length);
-      }
-    }
-  };
-  const [initialState, setInitialState] = useState({
-    password,
-    email,
-    savePassword: true,
-  });
 
   const setCookie = (cname, cvalue, exdays) => {
     const d = new Date();
@@ -70,33 +44,25 @@ const LoginForm = () => {
   const login = async (values) => {
     try {
       const res = await authApi.login(values);
-      localStorage.setItem("token", res.token);
-      if (values.savePassword) {
-        setCookie("email", values.email, 30);
-        setCookie("password", values.password, 30);
-      }
+
+      setCookie("token", res.token, 30);
       router.push("/welcome");
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    setEmail(getCookie("email"));
-    setPassword(getCookie("password"));
-    setInitialState((prevState) => ({
-      ...prevState,
-      password: getCookie("password"),
-      email: getCookie("email"),
-    }));
-  }, [email, password]);
-
   return (
     <FormContainer>
       <Title title={"Welcome back"} />
       <SubTitle mb={40} title={"Please enter your details"} />
       <Formik
-        initialValues={initialState}
+        enableReinitialize
+        initialValues={{
+          password: "",
+          email: "",
+          savePassword: true,
+        }}
         validationSchema={Yup.object().shape({
           email: Yup.string().required().label("Email"),
           password: Yup.string().required().label("Password"),
@@ -105,10 +71,7 @@ const LoginForm = () => {
         onSubmit={login}
         validateOnChange={true}
       >
-        {({ handleChange, handleSubmit, handleBlur, values }) => {
-          console.log(initialState, "initialState");
-          console.log(values, "values");
-
+        {({ handleChange, handleBlur, values }) => {
           return (
             <Form>
               <Input>
@@ -139,7 +102,7 @@ const LoginForm = () => {
                   autoComplete="current-password"
                 />
               </Input>
-              <PasswordActions>
+              {/* <PasswordActions>
                 <Checkbox isChecked={values.savePassword}>
                   <Field
                     type="checkbox"
@@ -149,7 +112,7 @@ const LoginForm = () => {
                   <label htmlFor="savePassword">{"Remember for 30 days"}</label>
                 </Checkbox>
                 <p>{"Forgot password"}</p>
-              </PasswordActions>
+              </PasswordActions> */}
               <CTA mb={40} text={"Sign in"} />
             </Form>
           );

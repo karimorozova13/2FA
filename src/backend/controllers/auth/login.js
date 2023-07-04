@@ -12,7 +12,7 @@ const login = async (req, res) => {
     return res.status(400).json(error);
   }
 
-  const { email, password, savePassword } = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -29,7 +29,7 @@ const login = async (req, res) => {
     id: user._id,
   };
 
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "30d" });
 
   await User.findByIdAndUpdate(user._id, { token });
 
