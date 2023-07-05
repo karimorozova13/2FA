@@ -8,12 +8,19 @@ const Input = styled.div`
   border-radius: 3px;
   box-shadow: 0 0 12px ${colors.loginBg} inset;
 
-  /* overflow: hidden; */
   input {
     width: 100%;
     height: 100%;
     background-color: ${colors.inputBg};
     color: ${colors.mainWhite};
+    border: none;
+    outline: none;
+    font-size: 40px;
+    padding: 7px;
+    text-align: center;
+    &:focus {
+      transform: scale(1.1);
+    }
   }
 `;
 

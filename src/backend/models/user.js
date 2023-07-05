@@ -17,9 +17,6 @@ const userSchema = new Schema(
       minlength: 6,
       required: true,
     },
-    savePassword: {
-      type: Boolean,
-    },
     token: {
       type: String,
     },
@@ -31,13 +28,11 @@ const registerSchema = Joi.object({
   email: Joi.string().email().lowercase().required(),
   password: Joi.string().min(6).required(),
   confirmPassword: Joi.string().min(6).required(),
-  savePassword: Joi.boolean(),
 });
 
 const loginSchema = Joi.object({
   email: Joi.string().email().lowercase().required(),
   password: Joi.string().min(6).required(),
-  savePassword: Joi.boolean(),
 });
 
 const schemas = {

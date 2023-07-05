@@ -33,7 +33,7 @@ const RegisterForm = () => {
           phone: Yup.string()
             .required()
             .test("phone", "Phone number is not valid", (value) => {
-              const phone = `+${dialCode} ${value}`;
+              const phone = `+${dialCode}${value}`;
               return Yup.string().phone().isValidSync(phone);
             })
             .label("Phone number"),
@@ -57,13 +57,11 @@ const RegisterForm = () => {
           try {
             console.log({
               ...values,
-              phone: `+${dialCode} ${values.phone}`,
-              savePassword: false,
+              phone: `+${dialCode}${values.phone}`,
             });
             await authApi.register({
               ...values,
-              phone: `+${dialCode} ${values.phone}`,
-              savePassword: false,
+              phone: `+${dialCode}${values.phone}`,
             });
 
             router.push("/");

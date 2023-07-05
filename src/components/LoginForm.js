@@ -1,44 +1,25 @@
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import { useRouter } from "next/router";
-import styled from "styled-components";
 
-import { colors } from "@/config/colors";
 import { authApi } from "@/utils/authApi";
 
 import Input from "./Input";
 import SubTitle from "./SubTitle";
 import Title from "./Title";
-import Checkbox from "./Checkbox";
 import CTA from "./CTA";
 import LinksText from "./LinksText";
 import FormContainer from "./FormContainer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import VerifyContainer from "./VerifyContainer";
 import VerifyInput from "./Verifyinput";
 
-const PasswordActions = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-  p {
-    font-size: 14px;
-    font-weight: 500;
-    color: ${colors.text};
-    transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1);
-    cursor: pointer;
-    &:hover {
-      color: ${colors.cta};
-    }
-  }
-`;
-
 const LoginForm = () => {
   const router = useRouter();
   const [isVerificationModal, setIsVerificationModal] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [initValues, setInitValues] = useState("");
 
   const setCookie = (cname, cvalue, exdays) => {
     const d = new Date();
@@ -49,15 +30,55 @@ const LoginForm = () => {
   const login = async (values) => {
     try {
       const res = await authApi.login(values);
-
+      setInitValues(values);
       setCookie("token", res.token, 30);
       setIsVerificationModal(true);
-      // router.push("/welcome");
     } catch (error) {
       console.log(error);
     }
   };
 
+  const promptAuthentication = async (values) => {
+    console.log(values);
+    setIsVerificationModal(true);
+    const createVerify = await authApi.verify(values);
+    console.log(createVerify);
+  };
+  const onChangeHandler = (e) => {
+    const { maxLength, value, name } = e.target;
+    setOtp((prev) => prev + value);
+    const [fieldName, fieldIndex] = name.split("-");
+    let fieldIntIndex = parseInt(fieldIndex, 10);
+
+    if (value.length >= maxLength) {
+      if (fieldIntIndex < 6) {
+        const nextfield = document.querySelector(
+          `input[name=number-${fieldIntIndex + 1}]`
+        );
+
+        if (nextfield !== null) {
+          nextfield.focus();
+        }
+      }
+    }
+  };
+  const verifyAcc = async (e) => {
+    try {
+      if (e.keyCode === 13) {
+        const res = await authApi.verify({ email: initValues.email, otp });
+        // setIsVerificationModal(false);
+        // router.push("/welcome");
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
+    document.addEventListener("keypress", verifyAcc);
+
+    return () => {
+      document.removeEventListener("keypress", verifyAcc);
+    };
+  }, []);
+  console.log(initValues);
   return (
     <FormContainer>
       <Title title={"Welcome back"} />
@@ -67,19 +88,15 @@ const LoginForm = () => {
         initialValues={{
           password: "",
           email: "",
-          savePassword: true,
-          otp: "",
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().required().label("Email"),
           password: Yup.string().required().label("Password"),
-          savePassword: Yup.boolean().required(),
-          otp: Yup.string().required().label("Verification passcode"),
         })}
-        onSubmit={login}
+        onSubmit={promptAuthentication}
         validateOnChange={true}
       >
-        {({ handleChange, handleBlur, values }) => {
+        {({ handleChange, handleBlur, handleSubmit, values, errors }) => {
           return (
             <Form>
               <Input>
@@ -110,58 +127,66 @@ const LoginForm = () => {
                   autoComplete="current-password"
                 />
               </Input>
-              {/* <PasswordActions>
-                <Checkbox isChecked={values.savePassword}>
-                  <Field
-                    type="checkbox"
-                    name="savePassword"
-                    id="savePassword"
-                  />
-                  <label htmlFor="savePassword">{"Remember for 30 days"}</label>
-                </Checkbox>
-                <p>{"Forgot password"}</p>
-              </PasswordActions> */}
+              <CTA mb={40} text={"Sign in"} />
               {isVerificationModal && (
                 <Modal>
                   <VerifyContainer>
                     <VerifyInput>
-                      <input type={"text"} />
+                      <input
+                        autoFocus
+                        type={"number"}
+                        name={"number-1"}
+                        maxLength={"1"}
+                        onChange={onChangeHandler}
+                      />
+                    </VerifyInput>{" "}
+                    <VerifyInput>
+                      <input
+                        type={"number"}
+                        name={"number-2"}
+                        maxLength={"1"}
+                        onChange={onChangeHandler}
+                      />
+                    </VerifyInput>{" "}
+                    <VerifyInput>
+                      <input
+                        type={"number"}
+                        name={"number-3"}
+                        maxLength={"1"}
+                        onChange={onChangeHandler}
+                      />
+                    </VerifyInput>{" "}
+                    <VerifyInput>
+                      <input
+                        type={"number"}
+                        name={"number-4"}
+                        maxLength={1}
+                        onChange={onChangeHandler}
+                      />
                     </VerifyInput>
                     <VerifyInput>
-                      <input type={"text"} />
+                      <input
+                        type={"number"}
+                        name={"number-5"}
+                        maxLength={"1"}
+                        onChange={onChangeHandler}
+                      />
                     </VerifyInput>{" "}
                     <VerifyInput>
-                      <input type={"text"} />
-                    </VerifyInput>{" "}
-                    <VerifyInput>
-                      <input type={"text"} />
-                    </VerifyInput>{" "}
-                    <VerifyInput>
-                      <input type={"text"} />
-                    </VerifyInput>{" "}
-                    <VerifyInput>
-                      <input type={"text"} />
+                      <input
+                        type={"number"}
+                        name={"number-6"}
+                        maxLength={"1"}
+                        onChange={onChangeHandler}
+                      />
                     </VerifyInput>
                   </VerifyContainer>
-                  {/* <Field
-                    type={"text"}
-                    name="otp"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.otp}
-                    placeholder={"Enter your one time password"}
-                  /> */}
                 </Modal>
               )}
             </Form>
           );
         }}
       </Formik>
-      <CTA
-        mb={40}
-        onClick={() => setIsVerificationModal(true)}
-        text={"Sign in"}
-      />
 
       <LinksText
         href={"/register"}

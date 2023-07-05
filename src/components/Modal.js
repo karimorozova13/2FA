@@ -18,8 +18,8 @@ const Backdrop = styled.div`
   justify-content: center;
 `;
 
-const Modal = ({ children }) => {
-  return <Backdrop>{children}</Backdrop>;
+const Modal = ({ children, onClick }) => {
+  return <Backdrop onClick={onClick}>{children}</Backdrop>;
 };
 
 export default Modal;

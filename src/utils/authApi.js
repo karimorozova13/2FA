@@ -14,6 +14,10 @@ export const authApi = {
     const res = await apiConfig.post("api/auth/login", values);
     return res.data;
   },
+  verify: async (values) => {
+    const res = await apiConfig.post("api/auth/verify", values);
+    return res.data;
+  },
   logout: async (token) => {
     await apiConfig.get("api/auth/logout", {
       headers: {
