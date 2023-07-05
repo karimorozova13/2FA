@@ -13,6 +13,10 @@ import Checkbox from "./Checkbox";
 import CTA from "./CTA";
 import LinksText from "./LinksText";
 import FormContainer from "./FormContainer";
+import { useState } from "react";
+import Modal from "./Modal";
+import VerifyContainer from "./VerifyContainer";
+import VerifyInput from "./Verifyinput";
 
 const PasswordActions = styled.div`
   display: flex;
@@ -34,6 +38,7 @@ const PasswordActions = styled.div`
 
 const LoginForm = () => {
   const router = useRouter();
+  const [isVerificationModal, setIsVerificationModal] = useState(false);
 
   const setCookie = (cname, cvalue, exdays) => {
     const d = new Date();
@@ -46,7 +51,8 @@ const LoginForm = () => {
       const res = await authApi.login(values);
 
       setCookie("token", res.token, 30);
-      router.push("/welcome");
+      setIsVerificationModal(true);
+      // router.push("/welcome");
     } catch (error) {
       console.log(error);
     }
@@ -62,11 +68,13 @@ const LoginForm = () => {
           password: "",
           email: "",
           savePassword: true,
+          otp: "",
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().required().label("Email"),
           password: Yup.string().required().label("Password"),
           savePassword: Yup.boolean().required(),
+          otp: Yup.string().required().label("Verification passcode"),
         })}
         onSubmit={login}
         validateOnChange={true}
@@ -113,11 +121,48 @@ const LoginForm = () => {
                 </Checkbox>
                 <p>{"Forgot password"}</p>
               </PasswordActions> */}
-              <CTA mb={40} text={"Sign in"} />
+              {isVerificationModal && (
+                <Modal>
+                  <VerifyContainer>
+                    <VerifyInput>
+                      <input type={"text"} />
+                    </VerifyInput>
+                    <VerifyInput>
+                      <input type={"text"} />
+                    </VerifyInput>{" "}
+                    <VerifyInput>
+                      <input type={"text"} />
+                    </VerifyInput>{" "}
+                    <VerifyInput>
+                      <input type={"text"} />
+                    </VerifyInput>{" "}
+                    <VerifyInput>
+                      <input type={"text"} />
+                    </VerifyInput>{" "}
+                    <VerifyInput>
+                      <input type={"text"} />
+                    </VerifyInput>
+                  </VerifyContainer>
+                  {/* <Field
+                    type={"text"}
+                    name="otp"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.otp}
+                    placeholder={"Enter your one time password"}
+                  /> */}
+                </Modal>
+              )}
             </Form>
           );
         }}
       </Formik>
+      <CTA
+        mb={40}
+        onClick={() => setIsVerificationModal(true)}
+        text={"Sign in"}
+      />
+
       <LinksText
         href={"/register"}
         title={"Don't have an account?"}

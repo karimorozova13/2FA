@@ -1,5 +1,4 @@
 const current = async (req, res) => {
-  console.log(req.user);
   try {
     res.json({
       status: "success",

@@ -19,4 +19,7 @@ router.get("/logout", auth, authCtrl.logout);
 // current
 router.get("/current", auth, authCtrl.current);
 
+// otp verification
+router.post("/verify", authCtrl.verifyByOtp);
+
 module.exports = router;

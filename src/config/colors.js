@@ -7,4 +7,6 @@ export const colors = {
   link: "#738f95",
   sublink: "#adb7ac",
   boxSahdow: "rgba(149, 157, 165, 0.2)",
+  backdrop: "rgba(0, 0, 0, 0.8)",
+  inputBg: 'rgb(177, 212, 165, 0.2)'
 };
