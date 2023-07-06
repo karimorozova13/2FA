@@ -11,12 +11,73 @@ import SubTitle from "./SubTitle";
 import Title from "./Title";
 import Input from "./Input";
 import CTA from "./CTA";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DialCodeSelector from "./DialCodeSelector";
+import VerifyInput from "./Verifyinput";
+import Modal from "./Modal";
+import VerifyContainer from "./VerifyContainer";
 
 const RegisterForm = () => {
   const [dialCode, setDialCode] = useState("");
+  const [initialValues, setInitialValues] = useState({});
+  const [isVerificationModal, setIsVerificationModal] = useState(false);
+  const [otp, setOtp] = useState("");
   const router = useRouter();
+  const register = async (values) => {
+    try {
+      setInitialValues({
+        ...values,
+        phone: `+${dialCode}${values.phone}`,
+      });
+      await authApi.register({
+        ...values,
+        phone: `+${dialCode}${values.phone}`,
+      });
+      setIsVerificationModal(true);
+      // router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const onChangeHandler = (e) => {
+    const { maxLength, value, name } = e.target;
+    setOtp((prev) => prev + value);
+    const [fieldName, fieldIndex] = name.split("-");
+    let fieldIntIndex = parseInt(fieldIndex, 10);
+
+    if (value.length >= maxLength) {
+      if (fieldIntIndex < 6) {
+        const nextfield = document.querySelector(
+          `input[name=number-${fieldIntIndex + 1}]`
+        );
+
+        if (nextfield !== null) {
+          nextfield.focus();
+        }
+      }
+    }
+  };
+  const verifyAcc = async (e) => {
+    try {
+      if (e.keyCode === 13) {
+        const res = await authApi.verify({
+          phone: initialValues.phone,
+          password: initialValues.password,
+          email: initialValues.email,
+          otp,
+        });
+        // setIsVerificationModal(false);
+        // router.push("/welcome");
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
+    document.addEventListener("keypress", verifyAcc);
+
+    return () => {
+      document.removeEventListener("keypress", verifyAcc);
+    };
+  }, []);
   return (
     <FormContainer>
       <Title title={"Welcome to the Adventure"} />
@@ -140,6 +201,61 @@ const RegisterForm = () => {
           );
         }}
       </Formik>
+      {isVerificationModal && (
+        <Modal>
+          <VerifyContainer>
+            <VerifyInput>
+              <input
+                autoFocus
+                type={"number"}
+                name={"number-1"}
+                maxLength={"1"}
+                onChange={onChangeHandler}
+              />
+            </VerifyInput>{" "}
+            <VerifyInput>
+              <input
+                type={"number"}
+                name={"number-2"}
+                maxLength={"1"}
+                onChange={onChangeHandler}
+              />
+            </VerifyInput>{" "}
+            <VerifyInput>
+              <input
+                type={"number"}
+                name={"number-3"}
+                maxLength={"1"}
+                onChange={onChangeHandler}
+              />
+            </VerifyInput>{" "}
+            <VerifyInput>
+              <input
+                type={"number"}
+                name={"number-4"}
+                maxLength={1}
+                onChange={onChangeHandler}
+              />
+            </VerifyInput>
+            <VerifyInput>
+              <input
+                type={"number"}
+                name={"number-5"}
+                maxLength={"1"}
+                onChange={onChangeHandler}
+              />
+            </VerifyInput>{" "}
+            <VerifyInput>
+              <input
+                type={"number"}
+                name={"number-6"}
+                maxLength={"1"}
+                onChange={onChangeHandler}
+              />
+            </VerifyInput>
+          </VerifyContainer>
+        </Modal>
+      )}
       <LinksText
         href={"/"}
         title={"Already have an account?"}
