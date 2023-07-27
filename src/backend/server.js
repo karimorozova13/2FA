@@ -20,10 +20,11 @@ const authRouter = require("./routes/api/auth");
 app.use("/api/auth", authRouter);
 
 app.use((req, res) => {
+  console.log(req.body);
   res.status(404).json({
     status: "error",
     code: 404,
-    message: "Use api on routes: /api/todoApi",
+    message: "Use api on routes: /api/auth",
     data: "Page not found",
   });
 });

@@ -21,5 +21,7 @@ router.get("/current", auth, authCtrl.current);
 
 // otp verification
 router.post("/verify", authCtrl.verifyByOtp);
+router.post("/sendOTP", authCtrl.sendOTP);
+// router.post("./verifyOTP", authCtrl.verifyOTP);
 
 module.exports = router;

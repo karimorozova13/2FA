@@ -125,9 +125,9 @@ const RegisterForm = () => {
               phone: `+${dialCode}${values.phone}`,
             });
 
-            router.push("/");
+            // router.push("/");
           } catch (error) {
-            console.log(error);
+            console.log(error.response);
           }
         }}
         validateOnChange={true}

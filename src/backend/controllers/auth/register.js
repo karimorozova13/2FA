@@ -10,13 +10,14 @@ const { User, schemas } = require(`${basedir}/models/user`);
 
 const register = async (req, res) => {
   const { error } = schemas.register.validate(req.body);
+  // console.log(req.body);
 
   if (error) {
     return res.status(400).json(error.message);
   }
 
   const { email, password, phone } = req.body;
-
+  console.log(phone);
   const user = await User.findOne({ email });
 
   if (user) {
@@ -25,7 +26,7 @@ const register = async (req, res) => {
   client.verify.v2
     .services(verifySid)
     .verifications.create({
-      to: req.body.phone,
+      to: phone,
       channel: "sms",
     })
     .then((verification) => console.log(verification.status));

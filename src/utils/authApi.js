@@ -33,4 +33,12 @@ export const authApi = {
     });
     return res.data.data.user;
   },
+  sendOTP: async (phone) => {
+    const res = await apiConfig.get("api/auth/sendOTP", phone);
+    return res;
+  },
+  verifyOTP: async (phone, otp) => {
+    const res = await apiConfig.get("api/auth/verifyOTP", { phone, otp });
+    return res;
+  },
 };
