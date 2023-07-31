@@ -18,6 +18,10 @@ const Input = styled.div`
     font-size: 40px;
     padding: 7px;
     text-align: center;
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
     &:focus {
       transform: scale(1.1);
     }

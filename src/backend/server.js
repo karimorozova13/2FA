@@ -20,7 +20,6 @@ const authRouter = require("./routes/api/auth");
 app.use("/api/auth", authRouter);
 
 app.use((req, res) => {
-  console.log(req.body);
   res.status(404).json({
     status: "error",
     code: 404,

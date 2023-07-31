@@ -14,8 +14,12 @@ export const authApi = {
     const res = await apiConfig.post("api/auth/login", values);
     return res.data;
   },
-  verify: async (values) => {
-    const res = await apiConfig.post("api/auth/verify", values);
+  sendOTP: async (values) => {
+    const res = await apiConfig.post("api/auth/sendOTP", values);
+    return res.data;
+  },
+  verifyOTP: async (values) => {
+    const res = await apiConfig.post("api/auth/verifyOTP", values);
     return res.data;
   },
   logout: async (token) => {
@@ -32,13 +36,5 @@ export const authApi = {
       },
     });
     return res.data.data.user;
-  },
-  sendOTP: async (phone) => {
-    const res = await apiConfig.get("api/auth/sendOTP", phone);
-    return res;
-  },
-  verifyOTP: async (phone, otp) => {
-    const res = await apiConfig.get("api/auth/verifyOTP", { phone, otp });
-    return res;
   },
 };

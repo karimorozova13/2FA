@@ -5,19 +5,26 @@ const verifySid = process.env.TWILIO_VERIFY_SID;
 const client = require("twilio")(accountSid, authToken, {
   lazyLoading: true,
 });
+const { User, schemas } = require(`${basedir}/models/user`);
 
 const sendOTP = async (req, res, next) => {
-  const { phone } = req.body;
-  console.log(req.body);
+  const { error } = schemas.register.validate(req.body);
+  if (error) {
+    return res.status(400).json(error.message);
+  }
+  const { phone, email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (user) {
+    return res.status(409).json({ message: `${email} is already exist` });
+  }
   try {
-    console.log("here");
     const otpRes = await client.verify.v2
       .services(verifySid)
       .verifications.create({
         to: phone,
         channel: "sms",
       });
-    console.log(otpRes);
 
     return res
       .status(200)

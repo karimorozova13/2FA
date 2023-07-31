@@ -2,6 +2,7 @@ import * as Yup from "yup";
 import "yup-phone";
 import { Formik, Form, Field } from "formik";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 import { authApi } from "@/utils/authApi";
 
@@ -11,7 +12,6 @@ import SubTitle from "./SubTitle";
 import Title from "./Title";
 import Input from "./Input";
 import CTA from "./CTA";
-import { useEffect, useState } from "react";
 import DialCodeSelector from "./DialCodeSelector";
 import VerifyInput from "./Verifyinput";
 import Modal from "./Modal";
@@ -21,30 +21,36 @@ const RegisterForm = () => {
   const [dialCode, setDialCode] = useState("");
   const [initialValues, setInitialValues] = useState({});
   const [isVerificationModal, setIsVerificationModal] = useState(false);
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState([]);
+
   const router = useRouter();
+
   const register = async (values) => {
     try {
+      console.log({
+        ...values,
+        phone: `+${dialCode}${values.phone}`,
+      });
+      await authApi.sendOTP({
+        ...values,
+        phone: `+${dialCode}${values.phone}`,
+      });
       setInitialValues({
         ...values,
         phone: `+${dialCode}${values.phone}`,
       });
-      await authApi.register({
-        ...values,
-        phone: `+${dialCode}${values.phone}`,
-      });
       setIsVerificationModal(true);
-      // router.push("/");
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
     }
   };
-  const onChangeHandler = (e) => {
+  const onChangeHandler = async (e) => {
     const { maxLength, value, name } = e.target;
-    setOtp((prev) => prev + value);
-    const [fieldName, fieldIndex] = name.split("-");
-    let fieldIntIndex = parseInt(fieldIndex, 10);
 
+    const [fieldName, fieldIndex] = name.split("-");
+    otp[Number(fieldIndex) - 1] = value;
+
+    let fieldIntIndex = parseInt(fieldIndex, 10);
     if (value.length >= maxLength) {
       if (fieldIntIndex < 6) {
         const nextfield = document.querySelector(
@@ -56,28 +62,26 @@ const RegisterForm = () => {
         }
       }
     }
+    if (name === "number-6") {
+      await verifyAcc(initialValues.phone, otp);
+    }
   };
-  const verifyAcc = async (e) => {
+  const verifyAcc = async (phone, code) => {
     try {
-      if (e.keyCode === 13) {
-        const res = await authApi.verify({
-          phone: initialValues.phone,
-          password: initialValues.password,
-          email: initialValues.email,
-          otp,
-        });
-        // setIsVerificationModal(false);
-        // router.push("/welcome");
+      const res = await authApi.verifyOTP({
+        phone,
+        code: code.join(""),
+      });
+      if (res) {
+        await authApi.register(initialValues);
+        setIsVerificationModal(false);
+        router.push("/");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
-  useEffect(() => {
-    document.addEventListener("keypress", verifyAcc);
 
-    return () => {
-      document.removeEventListener("keypress", verifyAcc);
-    };
-  }, []);
   return (
     <FormContainer>
       <Title title={"Welcome to the Adventure"} />
@@ -114,22 +118,7 @@ const RegisterForm = () => {
             .label("Confirm password")
             .oneOf([Yup.ref("password"), null], "Passwords should match"),
         })}
-        onSubmit={async (values) => {
-          try {
-            console.log({
-              ...values,
-              phone: `+${dialCode}${values.phone}`,
-            });
-            await authApi.register({
-              ...values,
-              phone: `+${dialCode}${values.phone}`,
-            });
-
-            // router.push("/");
-          } catch (error) {
-            console.log(error.response);
-          }
-        }}
+        onSubmit={register}
         validateOnChange={true}
       >
         {({ handleChange, handleSubmit, handleBlur, values, errors }) => {
@@ -209,7 +198,7 @@ const RegisterForm = () => {
                 autoFocus
                 type={"number"}
                 name={"number-1"}
-                maxLength={"1"}
+                maxLength={1}
                 onChange={onChangeHandler}
               />
             </VerifyInput>{" "}
@@ -217,7 +206,7 @@ const RegisterForm = () => {
               <input
                 type={"number"}
                 name={"number-2"}
-                maxLength={"1"}
+                maxLength={1}
                 onChange={onChangeHandler}
               />
             </VerifyInput>{" "}
@@ -225,7 +214,7 @@ const RegisterForm = () => {
               <input
                 type={"number"}
                 name={"number-3"}
-                maxLength={"1"}
+                maxLength={1}
                 onChange={onChangeHandler}
               />
             </VerifyInput>{" "}
@@ -241,7 +230,7 @@ const RegisterForm = () => {
               <input
                 type={"number"}
                 name={"number-5"}
-                maxLength={"1"}
+                maxLength={1}
                 onChange={onChangeHandler}
               />
             </VerifyInput>{" "}
@@ -249,7 +238,7 @@ const RegisterForm = () => {
               <input
                 type={"number"}
                 name={"number-6"}
-                maxLength={"1"}
+                maxLength={1}
                 onChange={onChangeHandler}
               />
             </VerifyInput>

@@ -41,8 +41,6 @@ const LoginForm = () => {
   const promptAuthentication = async (values) => {
     console.log(values);
     setIsVerificationModal(true);
-    const createVerify = await authApi.verify(values);
-    console.log(createVerify);
   };
   const onChangeHandler = (e) => {
     const { maxLength, value, name } = e.target;
@@ -62,23 +60,7 @@ const LoginForm = () => {
       }
     }
   };
-  const verifyAcc = async (e) => {
-    try {
-      if (e.keyCode === 13) {
-        const res = await authApi.verify({ email: initValues.email, otp });
-        // setIsVerificationModal(false);
-        // router.push("/welcome");
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    document.addEventListener("keypress", verifyAcc);
 
-    return () => {
-      document.removeEventListener("keypress", verifyAcc);
-    };
-  }, []);
-  console.log(initValues);
   return (
     <FormContainer>
       <Title title={"Welcome back"} />
