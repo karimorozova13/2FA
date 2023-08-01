@@ -10,10 +10,10 @@ import Title from "./Title";
 import CTA from "./CTA";
 import LinksText from "./LinksText";
 import FormContainer from "./FormContainer";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Modal from "./Modal";
 import VerifyContainer from "./VerifyContainer";
-import VerifyInput from "./Verifyinput";
+import VerifyInput from "./VerifyInput";
 import Loader from "./Loader";
 
 const LoginForm = () => {

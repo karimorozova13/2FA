@@ -13,7 +13,7 @@ import Title from "./Title";
 import Input from "./Input";
 import CTA from "./CTA";
 import DialCodeSelector from "./DialCodeSelector";
-import VerifyInput from "./Verifyinput";
+import VerifyInput from "./VerifyInput";
 import Modal from "./Modal";
 import VerifyContainer from "./VerifyContainer";
 import Loader from "./Loader";
