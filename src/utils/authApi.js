@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiConfig = axios.create({
-  baseURL: "https://two-factor-authentification-fec28b461a32.herokuapp.com/",
+  baseURL: "http://localhost:3003/",
   headers: { credentials: "include" },
 });
 
