@@ -14,12 +14,17 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import VerifyContainer from "./VerifyContainer";
 import VerifyInput from "./Verifyinput";
+import Loader from "./Loader";
 
 const LoginForm = () => {
   const router = useRouter();
+
   const [isVerificationModal, setIsVerificationModal] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [initValues, setInitValues] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [phone, setPhone] = useState("");
+  const [initValues, setInitValues] = useState({});
+  const otp = [];
 
   const setCookie = (cname, cvalue, exdays) => {
     const d = new Date();
@@ -28,24 +33,25 @@ const LoginForm = () => {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   };
   const login = async (values) => {
+    setIsLoading(true);
     try {
-      const res = await authApi.login(values);
+      const res = await authApi.loginSendOTP(values);
+
       setInitValues(values);
-      setCookie("token", res.token, 30);
+      setPhone(res.phone);
       setIsVerificationModal(true);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const promptAuthentication = async (values) => {
-    console.log(values);
-    setIsVerificationModal(true);
-  };
-  const onChangeHandler = (e) => {
+  const onChangeHandler = async (e) => {
     const { maxLength, value, name } = e.target;
-    setOtp((prev) => prev + value);
+
     const [fieldName, fieldIndex] = name.split("-");
+
+    otp[Number(fieldIndex) - 1] = value;
     let fieldIntIndex = parseInt(fieldIndex, 10);
 
     if (value.length >= maxLength) {
@@ -58,6 +64,29 @@ const LoginForm = () => {
           nextfield.focus();
         }
       }
+    }
+    if (name === "number-6") {
+      await verifyAcc(phone, otp);
+    }
+  };
+  const verifyAcc = async (phone, code) => {
+    setIsLoading(true);
+
+    try {
+      const res = await authApi.loginVerifyOTP({
+        phone,
+        code: code.join(""),
+      });
+      if (res) {
+        const res = await authApi.login(initValues);
+        setCookie("token", res.token, 30);
+        setIsVerificationModal(false);
+        router.push("/welcome");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +104,7 @@ const LoginForm = () => {
           email: Yup.string().required().label("Email"),
           password: Yup.string().required().label("Password"),
         })}
-        onSubmit={promptAuthentication}
+        onSubmit={login}
         validateOnChange={true}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => {
@@ -175,6 +204,11 @@ const LoginForm = () => {
         title={"Don't have an account?"}
         linkText={"Sign up"}
       />
+      {isLoading && (
+        <Modal>
+          <Loader />
+        </Modal>
+      )}
     </FormContainer>
   );
 };

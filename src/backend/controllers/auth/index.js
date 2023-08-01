@@ -4,6 +4,8 @@ const logout = require("./logout");
 const current = require("./current");
 const sendOTP = require("./sendOTP");
 const verifyOTP = require("./verifyOTP");
+const loginSendOTP = require("./loginSendOTP");
+const loginVerifyOTP = require("./loginVerifyOTP");
 
 module.exports = {
   register,
@@ -12,4 +14,6 @@ module.exports = {
   current,
   verifyOTP,
   sendOTP,
+  loginSendOTP,
+  loginVerifyOTP,
 };

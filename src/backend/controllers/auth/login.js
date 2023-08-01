@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const { SECRET_KEY } = process.env;
@@ -12,18 +12,18 @@ const login = async (req, res) => {
     return res.status(400).json(error);
   }
 
-  const { email, password } = req.body;
+  const { email } = req.body;
   const user = await User.findOne({ email });
 
-  if (!user) {
-    return res.status(401).json({ message: `${email} doesn't exist` });
-  }
+  // if (!user) {
+  //   return res.status(401).json({ message: `${email} doesn't exist` });
+  // }
 
-  const comparedPassword = await bcrypt.compare(password, user.password);
+  // const comparedPassword = await bcrypt.compare(password, user.password);
 
-  if (!comparedPassword) {
-    return res.status(401).json({ message: `Password isn't correct` });
-  }
+  // if (!comparedPassword) {
+  //   return res.status(401).json({ message: `Password isn't correct` });
+  // }
 
   const payload = {
     id: user._id,

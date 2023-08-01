@@ -16,21 +16,22 @@ import DialCodeSelector from "./DialCodeSelector";
 import VerifyInput from "./Verifyinput";
 import Modal from "./Modal";
 import VerifyContainer from "./VerifyContainer";
+import Loader from "./Loader";
 
 const RegisterForm = () => {
+  const router = useRouter();
+
   const [dialCode, setDialCode] = useState("");
   const [initialValues, setInitialValues] = useState({});
   const [isVerificationModal, setIsVerificationModal] = useState(false);
-  const [otp, setOtp] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const router = useRouter();
+  const otp = [];
 
   const register = async (values) => {
+    setIsLoading(true);
+
     try {
-      console.log({
-        ...values,
-        phone: `+${dialCode}${values.phone}`,
-      });
       await authApi.sendOTP({
         ...values,
         phone: `+${dialCode}${values.phone}`,
@@ -42,6 +43,8 @@ const RegisterForm = () => {
       setIsVerificationModal(true);
     } catch (error) {
       console.log(error.response);
+    } finally {
+      setIsLoading(false);
     }
   };
   const onChangeHandler = async (e) => {
@@ -67,6 +70,8 @@ const RegisterForm = () => {
     }
   };
   const verifyAcc = async (phone, code) => {
+    setIsLoading(true);
+
     try {
       const res = await authApi.verifyOTP({
         phone,
@@ -79,6 +84,8 @@ const RegisterForm = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -250,6 +257,11 @@ const RegisterForm = () => {
         title={"Already have an account?"}
         linkText={"Log in"}
       />
+      {isLoading && (
+        <Modal>
+          <Loader />
+        </Modal>
+      )}
     </FormContainer>
   );
 };

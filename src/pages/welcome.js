@@ -1,9 +1,7 @@
 import BgSection from "@/components/BgSection";
 import Container from "@/components/Container";
 import LogOut from "@/components/LogOut";
-import Section from "@/components/Section";
 import Title from "@/components/Title";
-import React from "react";
 
 const welcome = () => {
   return (
@@ -12,7 +10,7 @@ const welcome = () => {
 
       <BgSection fb={"100%"} h={"100vh"}>
         <Container>
-          <Title title={"Welcome"} />
+          <Title title={"I did it)))"} />
         </Container>
       </BgSection>
     </>

@@ -22,6 +22,14 @@ export const authApi = {
     const res = await apiConfig.post("api/auth/verifyOTP", values);
     return res.data;
   },
+  loginSendOTP: async (values) => {
+    const res = await apiConfig.post("api/auth/loginSendOTP", values);
+    return res.data;
+  },
+  loginVerifyOTP: async (values) => {
+    const res = await apiConfig.post("api/auth/loginVerifyOTP", values);
+    return res.data;
+  },
   logout: async (token) => {
     await apiConfig.get("api/auth/logout", {
       headers: {
