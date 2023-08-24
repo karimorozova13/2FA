@@ -13,8 +13,8 @@ import FormContainer from "./FormContainer";
 import { useState } from "react";
 import Modal from "./Modal";
 import VerifyContainer from "./VerifyContainer";
-import VerifyInput from "./VerifyInput";
 import Loader from "./Loader";
+import VerifyInput from "./VerifyInput";
 
 const LoginForm = () => {
   const router = useRouter();

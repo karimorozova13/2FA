@@ -13,10 +13,10 @@ import Title from "./Title";
 import Input from "./Input";
 import CTA from "./CTA";
 import DialCodeSelector from "./DialCodeSelector";
-import VerifyInput from "./VerifyInput";
 import Modal from "./Modal";
 import VerifyContainer from "./VerifyContainer";
 import Loader from "./Loader";
+import VerifyInput from "./VerifyInput";
 
 const RegisterForm = () => {
   const router = useRouter();
