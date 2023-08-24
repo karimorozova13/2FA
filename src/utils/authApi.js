@@ -1,8 +1,7 @@
 import axios from "axios";
-console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
 
 const apiConfig = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL, // "http://localhost:3003/",
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL,
   headers: { credentials: "include" },
 });
 

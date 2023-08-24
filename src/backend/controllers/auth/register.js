@@ -6,7 +6,6 @@ const { User, schemas } = require(`${basedir}/models/user`);
 
 const register = async (req, res) => {
   const { error } = schemas.register.validate(req.body);
-
   if (error) {
     return res.status(400).json(error.message);
   }
